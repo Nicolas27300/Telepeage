@@ -1,10 +1,21 @@
 package lml.tsii.telepage.metier.entity;
 
+import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
-public class Bill {
+@Entity
+public class Bill implements Serializable {
     
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @OneToMany
     private List<Ride> trajets;
     private float price;
 

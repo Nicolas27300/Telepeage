@@ -1,9 +1,19 @@
 package lml.tsii.telepage.metier.entity;
 
-public class Badge {
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class Badge implements Serializable {
     
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private String numero;
+    private String number;
 
     public long getId() {
         return id;
@@ -13,12 +23,12 @@ public class Badge {
         this.id = id;
     }
 
-    public String getNumero() {
-        return numero;
+    public String getNumber() {
+        return number;
     }
 
-    public void setNumero(String numero) {
-        this.numero = numero;
+    public void setNumber(String number) {
+        this.number = number;
     }
        
 }
