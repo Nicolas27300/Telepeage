@@ -23,7 +23,7 @@ public class Ride implements Serializable {
     float distance;
     float price;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    Date date;
+    Date ride_date;
 
     public long getId() {
         return id;
@@ -65,12 +65,12 @@ public class Ride implements Serializable {
         this.price = price;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getRide_date() {
+        return ride_date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setRide_date(Date ride_date) {
+        this.ride_date = ride_date;
     }
-      
+        
 }
