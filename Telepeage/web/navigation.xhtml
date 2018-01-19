@@ -8,10 +8,17 @@
     <h:form>
         <p:menubar>
             <p:menuitem url="">Accueil</p:menuitem>
-            <p:submenu label="Espace abonné" style="float:right">
-                <p:menuitem onclick="PF('inscription').show();">S'inscrire</p:menuitem>
-                <p:menuitem onclick="PF('connexion').show();">Se connecter</p:menuitem>
-            </p:submenu>
+            <c:if test="#{!loginController.logged}">
+                <p:submenu label="Espace abonné" style="float:right">
+                    <p:menuitem onclick="PF('inscription').show();">S'inscrire</p:menuitem>
+                    <p:menuitem onclick="PF('connexion').show();">Se connecter</p:menuitem>
+                </p:submenu>
+            </c:if>
+            <c:if test="#{loginController.logged}">
+                <p:submenu label="Bonjour #{loginController.firstName} #{loginController.name}" style="float: right">
+                    <p:menuitem actionListener="#{loginController.deconnexion}">Déconnexion</p:menuitem>
+                </p:submenu>
+            </c:if>
         </p:menubar>
     </h:form>
 </ui:composition>

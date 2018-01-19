@@ -1,14 +1,19 @@
 package lml.tsii.telepage.client;
 
+import java.awt.event.ActionEvent;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import lml.tsii.telepage.metier.CustomerService;
 import lml.tsii.telepage.metier.MetierFactory;
 import lml.tsii.telepage.metier.entity.Customer;
@@ -16,19 +21,20 @@ import lml.tsii.telepage.metier.entity.Customer;
 @ManagedBean
 @ViewScoped
 public class CustomerController implements Serializable {
-    
+
     private CustomerService customerSrv;
     private long id;
     private String name;
     private String firstname;
     private String mail;
     private String password;
+    private String password_confirm;
     private String key;
     private Date validated_date;
     private boolean adminstrator;
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
         this.customerSrv = MetierFactory.getCustomerService();
     }
 
@@ -71,13 +77,21 @@ public class CustomerController implements Serializable {
     public void setMail(String mail) {
         this.mail = mail;
     }
-    
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPassword_confirm() {
+        return password_confirm;
+    }
+
+    public void setPassword_confirm(String password_confirm) {
+        this.password_confirm = password_confirm;
     }
 
     public String getKey() {
@@ -103,21 +117,27 @@ public class CustomerController implements Serializable {
     public void setAdminstrator(boolean adminstrator) {
         this.adminstrator = adminstrator;
     }
-    
-    public void add(){
-        Customer customer = new Customer();
-        customer.setFirstName(this.firstname);
-        customer.setName(this.name);
-        customer.setMail(this.mail);
-        customer.setPassword(this.encodeMd5(this.password));
-        customer.setKay("hdgfhdfhdg");
-        try {
-            this.customerSrv.add(customer);
-        } catch (Exception ex) {
-            Logger.getLogger(CustomerController.class.getName()).log(Level.SEVERE, null, ex);
+
+    public void add() throws Exception {
+        List<Customer> customers = this.customerSrv.getByEmail(this.mail);
+        if (customers == null) {
+            Customer customer = new Customer();
+            customer.setFirstName(this.firstname);
+            customer.setName(this.name);
+            customer.setMail(this.mail);
+            customer.setPassword(this.encodeMd5(this.password));
+            customer.setKay("hdgfhdfhdg");
+            if (this.password.equals(this.password_confirm)){
+                this.customerSrv.add(customer);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Erreur", "Inscription effectué, un mail de confirmation a été envoyé"));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Erreur", "Mot de passe non identique"));
+            }
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Erreur", "Email déjà utilisé"));
         }
     }
-    
+
     public String encodeMd5(String mdp) {
         byte[] uniqueKey = mdp.getBytes();
         byte[] hash = null;
@@ -138,5 +158,5 @@ public class CustomerController implements Serializable {
         }
         return hashString.toString();
     }
- 
+
 }

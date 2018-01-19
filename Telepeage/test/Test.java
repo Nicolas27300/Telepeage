@@ -9,11 +9,11 @@ public class Test {
     
     public static void main(String[] args) throws Exception {
         
-        //SimulationStation simulationStation = new SimulationStation();
+        SimulationStation simulationStation = new SimulationStation();
         //SimulationCustomer simulationCustomer = new SimulationCustomer();
         //SimulationRide simulationRide = new SimulationRide();
         //SimulationBill simulationBill = new SimulationBill();
-        SimulationBadge simulationBadge = new SimulationBadge();
+        //SimulationBadge simulationBadge = new SimulationBadge();
     }
     
 }

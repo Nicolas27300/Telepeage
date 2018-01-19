@@ -1,16 +1,24 @@
 package lml.tsii.telepage.client;
 
+import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.view.facelets.FaceletContext;
 import lml.tsii.telepage.metier.CustomerService;
 import lml.tsii.telepage.metier.MetierFactory;
+import lml.tsii.telepage.metier.entity.Customer;
 
 @ManagedBean
 @SessionScoped
@@ -104,7 +112,30 @@ public class LoginController implements Serializable {
     }
     
     public void connexion(){
-        
+        try {
+            List<Customer> customers = this.customerSrv.getByEmail(this.mail);
+            if ((customers != null) && (customers.get(0).getPassword().equals(this.encodeMd5(this.password)))){
+                this.logged = true;
+                this.administrator = customers.get(0).isAdministrator();
+                this.name = customers.get(0).getName();
+                this.firstName = customers.get(0).getFirstName();
+                ExternalContext content = FacesContext.getCurrentInstance().getExternalContext();
+                content.redirect("/Telepeage");
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Erreur", "Identifiant incorrect"));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void deconnexion() throws IOException{
+        this.logged = false;
+        this.mail = null;
+        this.firstName = null;
+        this.name = null;
+        ExternalContext content = FacesContext.getCurrentInstance().getExternalContext();
+        content.redirect("/Telepeage");
     }
     
     public String encodeMd5(String mdp) {

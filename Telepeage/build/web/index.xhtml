@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <f:view contentType="text/html; charset=UTF-8">
+        <h:head>
+            <f:facet name="first">               
+                <title>Société des autoroutes Paris-Normandie</title>
+                <style type="text/css">
+                    @import url(resources/css/style.css);    
+                </style>
+            </f:facet>
+        </h:head>
+        <h:body>
+            <ui:include src="navigation.xhtml"></ui:include>
+            <p:growl id="message" showDetail="true">
+                <p:dialog header="Inscription" widgetVar="inscription" showEffect="explode" hideEffect="Clip" height="220" draggable="false" resizable="false">
+                    <h:form>
+                        <h:panelGrid columns="2" cellpadding="2">
+                            Prénom : <p:inputText id="firstname" required="true" value="#{customerController.firstname}" />
+                            Nom : <p:inputText id="name" required="true" value="#{customerController.name}"/>
+                            Mail : <p:inputText id="mail" required="true" value="#{customerController.mail}"/>
+                            Mot de passe : <p:password id="password" required="true" value="#{customerController.password}"/>
+                            Confirmer le mot de passe : <p:password id="password_confirm" value="#{customerController.password_confirm}"/>
+                            <center><p:commandButton value="S'inscrire" actionListener="#{customerController.add}" update="message"/></center>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Connexion" widgetVar="connexion" showEffect="explode" hideEffect="Clip" height="120" draggable="false" resizable="false">
+                    <h:form>
+                        <h:panelGrid columns="2" cellpadding="2">
+                            Mail : <p:inputText id="mail" required="true" value="#{loginController.mail}"/>
+                            Mot de passe : <p:password id="password" required="true" value="#{loginController.password}"/>
+                            <center><p:commandButton value="Se connecter" actionListener="#{loginController.connexion}" update="message"/></center>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+            </p:growl>
+        </h:body>
+    </f:view>
+</html>
