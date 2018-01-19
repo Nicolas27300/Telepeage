@@ -21,9 +21,11 @@ public class Ride implements Serializable {
     @OneToOne
     private Station end;
     float distance;
-    float price;
+    double price;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    Date ride_date;
+    Date date_ride;
+    @OneToOne
+    Customer customer;
 
     public long getId() {
         return id;
@@ -57,20 +59,28 @@ public class Ride implements Serializable {
         this.distance = distance;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public Date getRide_date() {
-        return ride_date;
+    public Date getDate_ride() {
+        return date_ride;
     }
 
-    public void setRide_date(Date ride_date) {
-        this.ride_date = ride_date;
+    public void setDate_ride(Date date_ride) {
+        this.date_ride = date_ride;
     }
-        
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+          
 }

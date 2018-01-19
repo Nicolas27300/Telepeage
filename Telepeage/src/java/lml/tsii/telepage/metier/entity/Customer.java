@@ -21,7 +21,7 @@ public class Customer implements Serializable {
     private String mail;
     private String kay;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date date_validated;
+    private Date validated_date;
     private boolean administrator;
 
     public long getId() {
@@ -72,12 +72,12 @@ public class Customer implements Serializable {
         this.kay = kay;
     }
 
-    public Date getDate_validated() {
-        return date_validated;
+    public Date getValidated_date() {
+        return validated_date;
     }
 
-    public void setDate_validated(Date date_validated) {
-        this.date_validated = date_validated;
+    public void setValidated_date(Date validated_date) {
+        this.validated_date = validated_date;
     }
 
     public boolean isAdministrator() {

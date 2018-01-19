@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Bill implements Serializable {
@@ -18,6 +19,8 @@ public class Bill implements Serializable {
     @OneToMany
     private List<Ride> trajets;
     private float price;
+    @OneToOne
+    Customer customer;
 
     public long getId() {
         return id;
@@ -41,6 +44,14 @@ public class Bill implements Serializable {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
        
 }

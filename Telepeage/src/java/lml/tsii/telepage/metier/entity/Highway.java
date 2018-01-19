@@ -16,8 +16,6 @@ public class Highway implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
-    private String startCity;
-    private String endCity;
     @OneToMany
     private List<Station> stations;
 
@@ -35,22 +33,6 @@ public class Highway implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getStartCity() {
-        return startCity;
-    }
-
-    public void setStartCity(String startCity) {
-        this.startCity = startCity;
-    }
-
-    public String getEndCity() {
-        return endCity;
-    }
-
-    public void setEndCity(String endCity) {
-        this.endCity = endCity;
     }
 
     public List<Station> getStations() {

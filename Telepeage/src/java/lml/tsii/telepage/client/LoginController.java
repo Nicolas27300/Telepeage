@@ -8,24 +8,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import lml.tsii.telepage.metier.CustomerService;
 import lml.tsii.telepage.metier.MetierFactory;
-import lml.tsii.telepage.metier.entity.Customer;
 
 @ManagedBean
-@ViewScoped
-public class CustomerController implements Serializable {
+@SessionScoped
+public class LoginController implements Serializable {
     
     private CustomerService customerSrv;
-    private long id;
     private String name;
-    private String firstname;
-    private String mail;
+    private String firstName;
     private String password;
+    private String mail;
     private String key;
     private Date validated_date;
-    private boolean adminstrator;
+    private boolean administrator;
+    private boolean logged = false;
     
     @PostConstruct
     public void init(){
@@ -40,14 +39,6 @@ public class CustomerController implements Serializable {
         this.customerSrv = customerSrv;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -56,12 +47,20 @@ public class CustomerController implements Serializable {
         this.name = name;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getMail() {
@@ -70,14 +69,6 @@ public class CustomerController implements Serializable {
 
     public void setMail(String mail) {
         this.mail = mail;
-    }
-    
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getKey() {
@@ -96,26 +87,24 @@ public class CustomerController implements Serializable {
         this.validated_date = validated_date;
     }
 
-    public boolean isAdminstrator() {
-        return adminstrator;
+    public boolean isAdministrator() {
+        return administrator;
     }
 
-    public void setAdminstrator(boolean adminstrator) {
-        this.adminstrator = adminstrator;
+    public void setAdministrator(boolean administrator) {
+        this.administrator = administrator;
+    }
+
+    public boolean isLogged() {
+        return logged;
+    }
+
+    public void setLogged(boolean logged) {
+        this.logged = logged;
     }
     
-    public void add(){
-        Customer customer = new Customer();
-        customer.setFirstName(this.firstname);
-        customer.setName(this.name);
-        customer.setMail(this.mail);
-        customer.setPassword(this.encodeMd5(this.password));
-        customer.setKay("hdgfhdfhdg");
-        try {
-            this.customerSrv.add(customer);
-        } catch (Exception ex) {
-            Logger.getLogger(CustomerController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void connexion(){
+        
     }
     
     public String encodeMd5(String mdp) {
@@ -138,5 +127,5 @@ public class CustomerController implements Serializable {
         }
         return hashString.toString();
     }
- 
+    
 }
