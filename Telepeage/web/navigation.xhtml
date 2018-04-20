@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:form>
+        <c:if test="#{loginController.logged}">
+            <p:dock position="bottom">
+                <p:menuitem value="Accueil" icon="/img/home.jpg" url="/"/>
+                <p:menuitem value="Abonnement" icon="/img/telepeage.png" url="abonnement.xhtml"/>
+                <c:if test="#{subscriptionController.searchSubscription()}">
+                    <p:menuitem value="Trajets" icon="/img/autoroute.png" url="trajets.xhtml"/>
+                </c:if>
+                <c:if test="#{loginController.customer.administrator}">
+                    <p:menuitem value="Administration" icon="/img/admin.jpg" url="administration.xhtml"/>
+                </c:if>
+                <p:menuitem value="Déconnexion" icon="/img/deconnexion.png" actionListener="#{loginController.deconnexion}"/>
+            </p:dock>
+        </c:if>
+        <c:if test="#{!loginController.logged}">
+            <p:dock position="bottom">
+                <p:menuitem value="Accueil" icon="/img/home.jpg" url="/"/>
+                <p:menuitem value="Inscription" icon="/img/inscription.png" onclick="PF('inscription').show();"/>
+                <p:menuitem value="Connexion" icon="/img/connexion.png" onclick="PF('connexion').show();"/>
+            </p:dock>
+        </c:if>
+    </h:form>
+    <p:growl id="message" showDetail="true">
+        <p:dialog header="Inscription" widgetVar="inscription" showEffect="explode" hideEffect="Clip" height="320" draggable="false" resizable="false">
+            <h:form>
+                <h:panelGrid columns="2" cellpadding="2">
+                    Prénom : <p:inputText id="firstname" required="true" value="#{customerController.firstname}" />
+                    Nom : <p:inputText id="name" required="true" value="#{customerController.name}"/>
+                    Mail : <p:inputText id="mail" required="true" value="#{customerController.mail}"/>
+                    Mot de passe : <p:password id="password" required="true" value="#{customerController.password}" feedback="true" promptLabel="Très mauvais" weakLabel="Mauvais" goodLabel="Bien" strongLabel="Très bien"/>
+                    Confirmer le mot de passe : <p:password id="password_confirm" value="#{customerController.password_confirm}"/>
+                    Adresse : <p:inputText id="adress" required="true" value="#{customerController.adress}"/>
+                    Code postal : <p:inputText id="cp" required="true" value="#{customerController.cp}"/>
+                    Ville : <p:inputText id="city" required="true" value="#{customerController.city}"/>
+                    <center><p:commandButton value="S'inscrire" actionListener="#{customerController.add}" update="message"/></center>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+        <p:dialog header="Connexion" widgetVar="connexion" showEffect="explode" hideEffect="Clip" height="120" draggable="false" resizable="false">
+            <h:form>
+                <h:panelGrid columns="2" cellpadding="2">
+                    Mail : <p:inputText id="mail" required="true" value="#{loginController.mail}"/>
+                    Mot de passe : <p:password id="password" required="true" value="#{loginController.password}"/>
+                    <center><p:commandButton value="Se connecter" actionListener="#{loginController.connexion}" update="message"/></center>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </p:growl>
+</ui:composition>

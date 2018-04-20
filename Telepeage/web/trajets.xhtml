@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <f:view contentType="text/html; charset=UTF-8">
+        <h:head>
+            <f:facet name="first">               
+                <title>Société des autoroutes Paris-Normandie</title>
+                <style type="text/css">
+                    @import url(resources/css/style.css);    
+                </style>
+                <h:outputStylesheet name="grid/grid.css" library="primefaces" />
+            </f:facet>
+        </h:head>
+        <h:body>
+            <ui:include src="navigation.xhtml" />
+            <c:if test="#{loginController.logged}">
+                <c:if test="#{subscriptionController.searchSubscription()}">
+                    Mes trajets réalisés
+                    <p:dataTable var="ride" value="#{rideController.rides}">
+                        <p:column headerText="Station départ">
+                            <h:outputText value="#{ride.start.name}" />
+                        </p:column>
+                        <p:column headerText="Station arrivée">
+                            <h:outputText value="#{ride.end.name}" />
+                        </p:column>
+                        <p:column headerText="Distance">
+                            <c:if test="#{ride.distance == 0}">
+                                Inconnu
+                            </c:if>
+                            <c:if test="#{ride.distance != 0}">
+                                <h:outputText value="#{ride.distance}" />km
+                            </c:if>
+                        </p:column>
+                        <p:column headerText="Prix">
+                            <h:outputText value="#{ride.price}" />€
+                        </p:column>
+                        <p:column headerText="Date">
+                            <h:outputText value="#{ride.date_ride}">
+                                <f:convertDateTime pattern="MM-dd-yyyy H:m:s" />
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                    <h:form>
+                        <p:commandButton value="Voir ma facture du mois en cours" onclick="PF('facture').show();"/>
+                        <p:commandButton value="Voir mes factures" onclick="PF('choixFacture').show();" />
+                    </h:form>
+                </c:if>
+                <c:if test="#{!subscriptionController.searchSubscription()}">
+                    Vous n'avez aucun abonnement
+                </c:if>
+            </c:if>
+            <c:if test="#{!loginController.logged}">
+                <center><p:graphicImage url="/img/interdit.png" /></center>
+            </c:if>
+            <p:dialog header="Facture" widgetVar="facture" showEffect="explode" hideEffect="Clip" height="800" width="1400" draggable="false" resizable="false">
+                <p:growl id="facture">
+                    <div class="ui-grid">
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-4">
+                                <p:graphicImage url="img/SAPN.png" />
+                            </div>
+                            <div class="ui-grid-col-8" style="text-align:  right;">
+                                Société des autoroutes Paris-Normandie <br/>
+                                30 BD GALLIENI <br/>
+                                92130 ISSY LES MOULINEAUX
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12">
+                                <p:separator style="background-color: #000000" />
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-4">
+                                <h3 style="margin-top:0; margin-bottom:0;">Client :</h3>
+                                <h:outputText value="#{loginController.customer.firstName} #{loginController.customer.name}" /><br/>
+                                <h:outputText value="#{loginController.customer.adress} #{loginController.customer.cp} #{loginController.customer.city}" /><br/>
+                                <h:outputText value="#{loginController.customer.mail}" />
+                            </div>
+                            <div class="ui-grid-col-8" style="text-align:  right;">
+                                <h3 style="margin-top:0; margin-bottom:0;"><u><h:outputText value="Facture de #{billController.name}" /></u></h3>
+                                Date : <h:outputText value="#{billController.date}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12">
+                                <p:separator style="background-color: #000000" />
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12">
+                                <p:dataTable var="ride" value="#{billController.rides}" id="tabfacture" >
+                                    <p:column headerText="Date" style="text-align: center;">
+                                        <h:outputText value="#{ride.date_ride}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy H:m:s" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Station départ" style="text-align: center;">
+                                        <h:outputText value="#{ride.start.name}" />
+                                    </p:column>
+                                    <p:column headerText="Station arrivée" style="text-align: center;">
+                                        <h:outputText value="#{ride.end.name}" />
+                                    </p:column>
+                                    <p:column headerText="Prix" style="text-align: center;">
+                                        <h:outputText value="#{ride.price}€" />
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12">
+                                <p:separator style="background-color: #000000" />
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-9">
+
+                            </div>
+                            <div class="ui-grid-col-3" style="text-align:  right;">
+                                Abonnement Télépéage : 22€
+                                <p:separator style="background-color: #000000" />
+                                <h:outputText value="Total : #{billController.total}€" />
+                                <p:separator style="background-color: #000000" />
+                            </div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12">
+                                <h2>Merci de régler cette facture le plus vite possible.</h2>
+                            </div>
+                        </div>
+                    </div>
+                </p:growl>
+                <h:form>
+                    <h:commandLink actionListener="#{billController.pdf}">
+                        <p:graphicImage url="img/pdf.png" />
+                    </h:commandLink>
+                </h:form>
+            </p:dialog>
+            <p:dialog header="Choix facture" widgetVar="choixFacture" showEffect="explode" hideEffect="Clip" height="800" width="1400" draggable="false" resizable="false">
+                <h:form>
+                    <h:panelGrid columns="1">
+                        <p:selectOneMenu value="#{billController.bill}">
+                            <f:selectItems value="#{billController.bills}" />
+                        </p:selectOneMenu>
+                        <p:commandButton value="Valider" actionListener="#{billController.search}" update="coucou"/>
+                    </h:panelGrid>
+                </h:form>
+                <p:panel id="coucou">
+                    <div class="ui-grid" id="lafacture">
+                        <p:growl id="test">
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-4">
+                                    <p:graphicImage url="img/SAPN.png" />
+                                </div>
+                                <div class="ui-grid-col-8" style="text-align:  right;">
+                                    Société des autoroutes Paris-Normandie <br/>
+                                    30 BD GALLIENI <br/>
+                                    92130 ISSY LES MOULINEAUX
+                                </div>
+                            </div>
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-12">
+                                    <p:separator style="background-color: #000000" />
+                                </div>
+                            </div>
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-4">
+                                    <h3 style="margin-top:0; margin-bottom:0;">Client :</h3>
+                                    <h:outputText value="#{loginController.customer.firstName} #{loginController.customer.name}" /><br/>
+                                    <h:outputText value="#{loginController.customer.adress} #{loginController.customer.cp} #{loginController.customer.city}" /><br/>
+                                    <h:outputText value="#{loginController.customer.mail}" />
+                                </div>
+                                <div class="ui-grid-col-8" style="text-align:  right;">
+                                    <h3 style="margin-top:0; margin-bottom:0;"><u><h:outputText value="Facture de #{billController.name}" /></u></h3>
+                                    Date : <h:outputText value="#{billController.date}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText>
+                                </div>
+                            </div>
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-12">
+                                    <p:separator style="background-color: #000000" />
+                                </div>
+                            </div>
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-12">
+                                    <p:dataTable var="ride" value="#{billController.rides}" id="tabfacture2" >
+                                        <p:column headerText="Date" style="text-align: center;">
+                                            <h:outputText value="#{ride.date_ride}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy H:m:s" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Station départ" style="text-align: center;">
+                                            <h:outputText value="#{ride.start.name}" />
+                                        </p:column>
+                                        <p:column headerText="Station arrivée" style="text-align: center;">
+                                            <h:outputText value="#{ride.end.name}" />
+                                        </p:column>
+                                        <p:column headerText="Prix" style="text-align: center;">
+                                            <h:outputText value="#{ride.price}€" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                            </div>
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-12">
+                                    <p:separator style="background-color: #000000" />
+                                </div>
+                            </div>
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-9">
+
+                                </div>
+                                <div class="ui-grid-col-3" style="text-align:  right;">
+                                    Abonnement Télépéage : 22€
+                                    <p:separator style="background-color: #000000" />
+                                    <h:outputText value="Total : #{billController.total}€" />
+                                    <p:separator style="background-color: #000000" />
+                                </div>
+                            </div>
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-12">
+                                    <h2>Merci de régler cette facture le plus vite possible.</h2>
+                                </div>
+                            </div>
+                        </p:growl>
+                    </div>
+                </p:panel>
+            </p:dialog>
+        </h:body>
+    </f:view>
+</html>

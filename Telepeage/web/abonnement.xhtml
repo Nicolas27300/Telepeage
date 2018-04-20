@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <f:view contentType="text/html; charset=UTF-8">
+        <h:head>
+            <f:facet name="first">               
+                <title>Société des autoroutes Paris-Normandie</title>
+                <style type="text/css">
+                    @import url(resources/css/style.css);    
+                </style>
+            </f:facet>
+        </h:head>
+        <h:body>
+            <ui:include src="navigation.xhtml"></ui:include>
+            <c:if test="#{loginController.logged}">
+                <c:if test="#{!subscriptionController.searchSubscription()}">
+                    <h:form>
+                        <p:commandButton value="Prendre un abonnement" onclick="PF('addabonnement').show();" />
+                    </h:form>
+                </c:if>
+                <c:if test="#{subscriptionController.searchSubscription()}">
+                    #{subscriptionController.dataSubscription()}
+                    <h:panelGrid columns="1" cellpadding="2">
+                        Vous avez un abonnement #{subscriptionController.subscription.type} avec le badge télépéage n°#{subscriptionController.badge.num}
+                        <h:form>
+                            <p:commandButton value="Résilier mon abonnement" onclick="PF('resilier').show();"/>
+                        </h:form>
+                    </h:panelGrid>
+                </c:if>
+            </c:if>
+            <c:if test="#{!loginController.logged}">
+                <center><p:graphicImage url="/img/interdit.png" /></center>
+            </c:if>
+            <p:dialog header="Prendre un abonnement" widgetVar="addabonnement" showEffect="explode" hideEffect="Clip" height="100" draggable="false" resizable="false">
+                <h:form>
+                    <h:panelGrid columns="2" cellpadding="2">
+                        Classe : 
+                        <p:selectOneMenu value="#{subscriptionController.list}">
+                            <f:selectItem itemLabel="Classe 1" itemValue="0" />
+                            <f:selectItem itemLabel="Classe 2" itemValue="1" />
+                            <f:selectItem itemLabel="Classe 3" itemValue="2" />
+                            <f:selectItem itemLabel="Classe 4" itemValue="3" />
+                            <f:selectItem itemLabel="Classe 5" itemValue="4" />
+                        </p:selectOneMenu>
+                        <center><p:commandButton value="S'abonner" actionListener="#{subscriptionController.add}"/></center>
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+            <p:dialog header="Résilier ton abonnement ?" widgetVar="resilier" showEffect="explode" hideEffect="Clip" height="50" draggable="false" resizable="false">
+                <h:form>
+                    <center>
+                    <h:panelGrid columns="2" cellpadding="1">
+                        <p:commandButton value="Oui" actionListener="#{subscriptionController.remove}"/>
+                        <p:commandButton value="Non" onclick="PF('resilier').hide();"/>
+                    </h:panelGrid>
+                    </center>
+                </h:form>
+            </p:dialog>
+        </h:body>
+    </f:view>
+</html>
